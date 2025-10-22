@@ -1,0 +1,10 @@
+﻿node_modules/
+.env
+.env.*
+prisma/dev.db
+.prisma/
+.prisma/client/
+dist/
+build/
+.next/
+.next/
