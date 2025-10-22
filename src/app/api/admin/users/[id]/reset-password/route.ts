@@ -1,10 +1,11 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import bcrypt from "bcrypt";
 
-export async function POST(req: Request, { params }: { params: { id: string } }) {
+export async function POST(req: NextRequest, context: { params: Promise<{ id: string }> }) {
+  const { id } = await context.params;
   const session = await getServerSession(authOptions);
   if (!session?.user || (session.user as any).role !== "ADMIN") {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
@@ -16,7 +17,7 @@ export async function POST(req: Request, { params }: { params: { id: string } })
 
   try {
     await prisma.user.update({
-      where: { id: params.id },
+      where: { id },
       data: { passwordHash: hash, mustChangePassword: true },
     });
     return NextResponse.json({ ok: true, tempPassword: pw });
