@@ -9,3 +9,4 @@ build/
 .next/
 .next/
 .next/
+src/generated/prisma/
